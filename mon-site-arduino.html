@@ -2,99 +2,86 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Deux Ohms - Deck Master</title>
+    <title>Deux Ohms - Hybrid Master</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --bg-body: #0f0f12;
-            --bg-panel: #1e1e24;
-            --accent: #339af0;
-            --accent-hover: #228be6;
-            --yt-red: #ff0000;
-            --text-main: #e9ecef;
-            --text-muted: #909296;
-            --code-bg: #1e1e1e;
+            --bg-body: #0f0f12; --bg-panel: #1e1e24; --accent: #339af0; --accent-hover: #228be6;
+            --layer-1: #339af0; --layer-2: #e03131;
+            --text-main: #e9ecef; --text-muted: #909296; --code-bg: #1e1e1e;
         }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; padding-bottom: 50px; }
 
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            padding-bottom: 50px;
-        }
-
-        /* --- HEADER & TOOLBAR --- */
-        .header-area { width: 100%; max-width: 1000px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        /* HEADER */
+        .header-area { width: 100%; max-width: 1000px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
         h1 { font-weight: 300; letter-spacing: 1px; margin: 0; font-size: 1.8em; display: flex; align-items: center; gap: 10px; }
-        
         .toolbar-top { display: flex; gap: 10px; background: var(--bg-panel); padding: 10px; border-radius: 10px; border: 1px solid #333; flex-wrap: wrap; }
         .btn-tool { background: #2c2e33; color: white; border: 1px solid #444; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
         .btn-tool:hover { background: #3c3e44; border-color: #666; }
-        .btn-preset { border-color: var(--accent); color: var(--accent); }
-        .btn-preset:hover { background: var(--accent); color: white; }
+        .btn-preset { border-color: var(--layer-1); color: var(--layer-1); }
+        .btn-preset:hover { background: var(--layer-1); color: white; }
 
-        /* --- VISUEL BOITIER --- */
-        .deck-container {
-            background: #18181b; padding: 40px; border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6); display: flex; gap: 40px;
-            margin-bottom: 30px; border: 1px solid #333; flex-wrap: wrap; justify-content: center;
+        /* LAYERS & SHIFT */
+        .layer-tabs { display: flex; background: #18181b; border-radius: 50px; padding: 5px; border: 1px solid #333; margin-bottom: 20px; }
+        .layer-tab { padding: 10px 30px; border-radius: 40px; cursor: pointer; font-weight: bold; transition: 0.3s; color: #888; border: 1px solid transparent; }
+        .layer-tab.active-l1 { background: var(--layer-1); color: white; box-shadow: 0 0 15px rgba(51, 154, 240, 0.4); }
+        .layer-tab.active-l2 { background: var(--layer-2); color: white; box-shadow: 0 0 15px rgba(224, 49, 49, 0.4); }
+        
+        .shift-config { background: #25262b; padding: 15px 25px; border-radius: 12px; border: 1px solid #444; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .shift-select { background: #101113; color: white; border: 1px solid #555; padding: 8px; border-radius: 5px; font-family: inherit; cursor: pointer; }
+
+        /* --- SPECIAL KEYS PANEL (NEW) --- */
+        #special-panel {
+            width: 100%; max-width: 900px; background: #2a2a35; border: 2px solid var(--accent);
+            border-radius: 12px; padding: 20px; margin-bottom: 30px; display: none;
+            box-shadow: 0 0 30px rgba(51, 154, 240, 0.2); animation: slideDown 0.3s ease;
         }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .sp-group { margin-bottom: 15px; }
+        .sp-title { font-size: 0.85em; color: #aaa; text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 1px; }
+        .sp-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .sp-btn {
+            background: #18181b; border: 1px solid #444; color: white; padding: 8px 12px;
+            border-radius: 6px; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; gap: 8px;
+            transition: 0.2s;
+        }
+        .sp-btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
+        .sp-btn i { font-size: 1.1em; }
+        .recording-indicator { color: var(--accent); font-weight: bold; margin-bottom: 15px; display: block; text-align: center; }
 
+        /* DECK */
+        .deck-container { background: #18181b; padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); display: flex; gap: 40px; margin-bottom: 30px; border: 1px solid #333; flex-wrap: wrap; justify-content: center; position: relative; overflow: hidden; transition: 0.3s; }
+        .deck-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--layer-1); transition: 0.3s; }
+        .deck-container.mode-l2::before { background: var(--layer-2); }
+        
         .knob-column { display: flex; flex-direction: column; align-items: center; width: 220px; }
-        .knob-visual { width: 80px; height: 80px; background: radial-gradient(circle at 30% 30%, #444, #111); border-radius: 50%; border: 4px solid #000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); position: relative; margin-bottom: 25px; }
-        .knob-visual::after { content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 4px; height: 20px; background: var(--accent); border-radius: 2px; box-shadow: 0 0 10px var(--accent); }
-        .knob-title { font-size: 0.9em; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 15px; }
+        .knob-visual { width: 80px; height: 80px; background: radial-gradient(circle at 30% 30%, #444, #111); border-radius: 50%; border: 4px solid #000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); position: relative; margin-bottom: 25px; transition: 0.3s; }
+        .knob-visual::after { content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 4px; height: 20px; background: var(--layer-1); border-radius: 2px; box-shadow: 0 0 10px var(--layer-1); transition: 0.3s; }
+        .deck-container.mode-l2 .knob-visual::after { background: var(--layer-2); box-shadow: 0 0 10px var(--layer-2); }
 
         .config-card { background: var(--bg-panel); width: 100%; border-radius: 12px; padding: 15px; box-sizing: border-box; border: 1px solid #373a40; }
         .action-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #373a40; }
         .action-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .icon-box { width: 30px; text-align: center; color: var(--accent); }
-
+        .icon-box { width: 30px; text-align: center; color: #777; transition: 0.3s; }
+        .deck-container.mode-l2 .icon-box { color: var(--layer-2); }
+        
         .key-display { background: #101113; border: 1px solid #5c5f66; padding: 5px 10px; border-radius: 6px; font-family: monospace; font-size: 0.85em; color: #fff; cursor: pointer; min-width: 80px; text-align: center; transition: 0.2s; }
-        .key-display:hover { border-color: var(--accent); color: var(--accent); }
-        .key-display.recording { background: var(--accent); color: #000; animation: pulse 1s infinite; }
+        .key-display:hover { border-color: white; }
+        .key-display.recording { background: white; color: black; animation: pulse 1s infinite; }
 
-        /* --- BARRE GENERATION --- */
         .action-bar { display: flex; gap: 15px; margin-bottom: 30px; justify-content: center; width: 100%; flex-wrap: wrap; }
-        .btn-main { border: none; padding: 12px 25px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s; color: white; }
+        .btn-main { border: none; padding: 12px 25px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; color: white; transition: 0.2s; }
         .btn-view { background: #343a40; } .btn-view:hover { background: #495057; }
-        .btn-copy { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); box-shadow: 0 4px 15px rgba(51, 154, 240, 0.3); }
-        .btn-copy:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(51, 154, 240, 0.4); }
-
-        /* --- EDITEUR --- */
+        .btn-copy { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); }
+        
         #editor-container { width: 100%; max-width: 800px; display: none; margin-bottom: 50px; }
         .editor-header { background: #2d2d2d; padding: 10px 20px; border-radius: 8px 8px 0 0; font-size: 0.9em; color: #aaa; border: 1px solid #444; border-bottom: none; }
         textarea.code-area { width: 100%; height: 300px; background: var(--code-bg); color: #d4d4d4; border: 1px solid #444; border-radius: 0 0 8px 8px; padding: 20px; font-family: 'Consolas', monospace; font-size: 14px; resize: vertical; outline: none; box-sizing: border-box; }
-
-        /* --- SCHEMA DE CABLAGE --- */
-        .wiring-section {
-            width: 100%; max-width: 1000px; background: #161618; 
-            border: 1px solid #333; border-radius: 20px; padding: 30px;
-            display: flex; gap: 40px; align-items: center; flex-wrap: wrap; justify-content: center;
-            margin-bottom: 50px;
-        }
-        .wiring-image img { max-width: 100%; width: 300px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); filter: brightness(1.1); transition: 0.3s; }
-        .wiring-image img:hover { transform: scale(1.05); }
         
-        .wiring-info { flex: 1; min-width: 300px; }
-        .wiring-info h3 { margin-top: 0; color: var(--accent); font-weight: 300; letter-spacing: 1px; }
-        .wiring-table { width: 100%; border-collapse: collapse; font-size: 0.95em; }
-        .wiring-table th { text-align: left; color: var(--text-muted); border-bottom: 1px solid #444; padding: 10px 5px; }
-        .wiring-table td { padding: 10px 5px; border-bottom: 1px solid #2a2a2a; }
-        .pin-tag { background: #2c2e33; padding: 2px 8px; border-radius: 4px; font-family: monospace; color: #a5d8ff; border: 1px solid #444; }
-
-        /* --- FOOTER --- */
         .yt-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid #333; width: 100%; text-align: center; }
         .yt-link { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: white; font-size: 1.2em; background: #202020; padding: 10px 25px; border-radius: 50px; transition: 0.3s; border: 1px solid #333; }
         .yt-link:hover { background: #2a2a2a; border-color: var(--yt-red); box-shadow: 0 0 20px rgba(255, 0, 0, 0.2); }
-        .yt-icon { color: var(--yt-red); font-size: 1.5em; }
-        .creator-text { color: var(--text-muted); font-size: 0.9em; margin-bottom: 10px; display: block; }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         #fileInput { display: none; }
@@ -103,27 +90,69 @@
 <body>
 
     <div class="header-area">
-        <h1><i class="fas fa-gamepad"></i> DECK MASTER</h1>
+        <h1><i class="fas fa-microchip"></i> HYBRID MASTER <span style="font-size:0.5em; background:var(--layer-2); padding:2px 8px; border-radius:4px; margin-left:10px;">V3.0</span></h1>
         
         <div class="toolbar-top">
-            <button class="btn-tool" onclick="saveProfile()" title="Sauvegarder en JSON"><i class="fas fa-save"></i> Sauvegarder</button>
-            <button class="btn-tool" onclick="document.getElementById('fileInput').click()" title="Charger JSON"><i class="fas fa-folder-open"></i> Charger</button>
+            <button class="btn-tool" onclick="saveProfile()"><i class="fas fa-save"></i> Save</button>
+            <button class="btn-tool" onclick="document.getElementById('fileInput').click()"><i class="fas fa-folder-open"></i> Load</button>
             <input type="file" id="fileInput" accept=".json" onchange="loadProfile(this)">
             <div style="width: 1px; background: #444; margin: 0 10px;"></div>
             <button class="btn-tool btn-preset" onclick="loadPreset('photoshop')"><i class="fas fa-paint-brush"></i> Ps</button>
             <button class="btn-tool btn-preset" onclick="loadPreset('premiere')"><i class="fas fa-video"></i> Pr</button>
-            <button class="btn-tool btn-preset" onclick="loadPreset('obs')"><i class="fas fa-broadcast-tower"></i> OBS</button>
         </div>
     </div>
 
-    <div class="deck-container">
+    <div class="layer-tabs">
+        <div class="layer-tab active-l1" id="tab-l1" onclick="switchLayer(1)">LAYER 1</div>
+        <div class="layer-tab" id="tab-l2" onclick="switchLayer(2)">LAYER 2 (Fn)</div>
+    </div>
+
+    <div id="special-panel">
+        <span class="recording-indicator">🔴 ENREGISTREMENT EN COURS... Appuyez sur une touche OU choisissez ci-dessous :</span>
+        
+        <div class="sp-group">
+            <span class="sp-title">Souris & Navigation</span>
+            <div class="sp-buttons">
+                <button class="sp-btn" onclick="insertSpecial('MOUSE_SCROLL_UP')"><i class="fas fa-arrow-up"></i> Molette HAUT</button>
+                <button class="sp-btn" onclick="insertSpecial('MOUSE_SCROLL_DOWN')"><i class="fas fa-arrow-down"></i> Molette BAS</button>
+                <button class="sp-btn" onclick="insertSpecial('MOUSE_LEFT')"><i class="fas fa-mouse-pointer"></i> Clic Gauche</button>
+                <button class="sp-btn" onclick="insertSpecial('MOUSE_RIGHT')"><i class="fas fa-mouse"></i> Clic Droit</button>
+            </div>
+        </div>
+
+        <div class="sp-group">
+            <span class="sp-title">Multimédia (Windows/Mac)</span>
+            <div class="sp-buttons">
+                <button class="sp-btn" onclick="insertSpecial('MEDIA_VOL_UP')"><i class="fas fa-volume-up"></i> Volume +</button>
+                <button class="sp-btn" onclick="insertSpecial('MEDIA_VOL_DOWN')"><i class="fas fa-volume-down"></i> Volume -</button>
+                <button class="sp-btn" onclick="insertSpecial('MEDIA_MUTE')"><i class="fas fa-volume-mute"></i> Mute</button>
+                <button class="sp-btn" onclick="insertSpecial('MEDIA_PLAY_PAUSE')"><i class="fas fa-play"></i> Play/Pause</button>
+            </div>
+        </div>
+        
+        <div style="margin-top:15px; font-size:0.9em; color:#888; font-style:italic;">
+            💡 Astuce : Maintenez CTRL ou ALT sur votre clavier physique en cliquant sur un bouton ci-dessus pour créer un combo (ex: CTRL + Molette).
+        </div>
+    </div>
+
+    <div class="shift-config">
+        <i class="fas fa-random" style="color:#aaa;"></i>
+        <span>Déclencheur Layer 2 :</span>
+        <select id="shiftSelect" class="shift-select" onchange="updateShiftConfig()">
+            <option value="8">Bouton Encodeur 1</option>
+            <option value="9">Bouton Encodeur 2</option>
+            <option value="10">Bouton Encodeur 3</option>
+            <option value="none">-- Aucun --</option>
+        </select>
+    </div>
+
+    <div class="deck-container" id="deckContainer">
         <div id="deck-grid" style="display:contents"></div>
     </div>
 
     <div class="action-bar">
-        <button class="btn-main btn-view" onclick="toggleCode(true)"><i class="fas fa-eye"></i> Voir le Code</button>
-        <button class="btn-main btn-view" onclick="toggleCode(false)"><i class="fas fa-pen"></i> Modifier</button>
-        <button class="btn-main btn-copy" onclick="copyCode()"><i class="fas fa-file-export"></i> Copier pour Arduino</button>
+        <button class="btn-main btn-view" onclick="toggleCode(true)"><i class="fas fa-eye"></i> Voir Code</button>
+        <button class="btn-main btn-copy" onclick="copyCode()"><i class="fas fa-file-export"></i> Copier .INO</button>
     </div>
 
     <div id="editor-container">
@@ -131,154 +160,184 @@
         <textarea id="codeArea" class="code-area" spellcheck="false"></textarea>
     </div>
 
-    <div class="wiring-section">
-        <div class="wiring-image">
-            <img src="https://www.xab3.ro/assets/img/products/atmega32u4-3_3v-8mhz1.png" alt="Arduino Pro Micro Pinout">
-        </div>
-        <div class="wiring-info">
-            <h3><i class="fas fa-plug"></i> Guide de Connexion</h3>
-            <p style="color:#888; font-size:0.9em; margin-bottom:20px;">Connectez tous les <strong>GND</strong> et <strong>VCC</strong> (5V) des encodeurs ensemble.</p>
-            
-            <table class="wiring-table">
-                <thead>
-                    <tr>
-                        <th>Encodeur (Gauche à Droite)</th>
-                        <th>DT (Pin)</th>
-                        <th>CLK (Pin)</th>
-                        <th>SW (Bouton)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Encodeur 1</strong></td>
-                        <td><span class="pin-tag">2</span></td>
-                        <td><span class="pin-tag">3</span></td>
-                        <td><span class="pin-tag">8</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Encodeur 2</strong></td>
-                        <td><span class="pin-tag">4</span></td>
-                        <td><span class="pin-tag">5</span></td>
-                        <td><span class="pin-tag">9</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Encodeur 3</strong></td>
-                        <td><span class="pin-tag">6</span></td>
-                        <td><span class="pin-tag">7</span></td>
-                        <td><span class="pin-tag">10</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
     <footer class="yt-footer">
-        <span class="creator-text">Outil offert par</span>
         <a href="https://www.youtube.com/@DeuxOhms" target="_blank" class="yt-link">
             <i class="fab fa-youtube yt-icon"></i> Deux Ohms
         </a>
     </footer>
 
     <script>
-        // --- CONFIG & DOM ---
+        // CONFIG
         const actions = [ { id: 'ccw', icon: 'fa-undo' }, { id: 'sw', icon: 'fa-fingerprint' }, { id: 'cw', icon: 'fa-redo' } ];
         const grid = document.getElementById('deck-grid');
-        let config = {};
+        let currentLayer = 1;
+        let shiftPin = "8";
+        let config = { 1: {}, 2: {} };
 
-        // Génération HTML
-        for (let i = 1; i <= 3; i++) {
-            let html = `<div class="knob-column"><div class="knob-visual"></div><div class="knob-title">Encodeur ${i}</div><div class="config-card">`;
-            actions.forEach(act => {
-                html += `<div class="action-row"><div class="icon-box"><i class="fas ${act.icon}"></i></div><div class="key-display" id="disp_${i}_${act.id}" onclick="record(${i}, '${act.id}')">...</div></div>`;
-            });
-            html += `</div></div>`;
-            grid.innerHTML += html;
-        }
-
-        // --- PRESETS ---
+        // PRESETS V3 (Hybrid)
         const presets = {
             photoshop: {
-                1: { cw: {key:']',mods:[],arduinoKey:"']'"}, ccw: {key:'[',mods:[],arduinoKey:"'['"}, sw: {key:'SPACE',mods:[],arduinoKey:"' '"} },
-                2: { cw: {key:'+',mods:['CTRL'],arduinoKey:"KEY_KP_PLUS"}, ccw: {key:'-',mods:['CTRL'],arduinoKey:"KEY_KP_MINUS"}, sw: {key:'0',mods:['CTRL'],arduinoKey:"'0'"} },
-                3: { cw: {key:'Z',mods:['CTRL','SHIFT'],arduinoKey:"'z'"}, ccw: {key:'Z',mods:['CTRL'],arduinoKey:"'z'"}, sw: {key:'S',mods:['CTRL'],arduinoKey:"'s'"} }
+                1: { // Base
+                    1: { cw: {key:'MOUSE_SCROLL_UP',mods:[],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:[],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'SPACE',mods:[],arduinoKey:"' '"} }, // Scroll
+                    2: { cw: {key:'MOUSE_SCROLL_UP',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'0',mods:['CTRL'],arduinoKey:"'0'"} }, // Zoom (Alt+Scroll)
+                    3: { cw: {key:'Z',mods:['CTRL','SHIFT'],arduinoKey:"'z'"}, ccw: {key:'Z',mods:['CTRL'],arduinoKey:"'z'"}, sw: {key:'S',mods:['CTRL'],arduinoKey:"'s'"} }
+                }
             },
             premiere: {
-                1: { cw: {key:'RIGHT',mods:[],arduinoKey:"KEY_RIGHT_ARROW"}, ccw: {key:'LEFT',mods:[],arduinoKey:"KEY_LEFT_ARROW"}, sw: {key:'SPACE',mods:[],arduinoKey:"' '"} },
-                2: { cw: {key:'=',mods:[],arduinoKey:"'='"}, ccw: {key:'-',mods:[],arduinoKey:"'-'"}, sw: {key:'M',mods:[],arduinoKey:"'m'"} },
-                3: { cw: {key:'K',mods:['CTRL'],arduinoKey:"'k'"}, ccw: {key:'Z',mods:['CTRL'],arduinoKey:"'z'"}, sw: {key:'S',mods:['CTRL'],arduinoKey:"'s'"} }
-            },
-            obs: {
-                1: { cw: {key:'F2',mods:[],arduinoKey:"KEY_F2"}, ccw: {key:'F1',mods:[],arduinoKey:"KEY_F1"}, sw: {key:'F12',mods:[],arduinoKey:"KEY_F12"} },
-                2: { cw: {key:'UP',mods:['ALT'],arduinoKey:"KEY_UP_ARROW"}, ccw: {key:'DOWN',mods:['ALT'],arduinoKey:"KEY_DOWN_ARROW"}, sw: {key:'M',mods:['ALT'],arduinoKey:"'m'"} }
+                1: {
+                    1: { cw: {key:'MOUSE_SCROLL_UP',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'SPACE',mods:[],arduinoKey:"' '"} }, // Zoom Timeline
+                    2: { cw: {key:'MOUSE_SCROLL_UP',mods:['CTRL'],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:['CTRL'],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'M',mods:[],arduinoKey:"'m'"} }, // Piste Hauteur
+                    3: { cw: {key:'K',mods:['CTRL'],arduinoKey:"'k'"}, ccw: {key:'Z',mods:['CTRL'],arduinoKey:"'z'"}, sw: {key:'S',mods:['CTRL'],arduinoKey:"'s'"} }
+                }
             }
         };
 
-        function loadPreset(name) {
-            if(confirm(`Charger le preset ${name} ?`)) { config = JSON.parse(JSON.stringify(presets[name])); updateUI(); }
+        function renderDeck() {
+            grid.innerHTML = '';
+            for (let i = 1; i <= 3; i++) {
+                let html = `<div class="knob-column"><div class="knob-visual"></div><div class="knob-title">Encodeur ${i}</div><div class="config-card">`;
+                actions.forEach(act => {
+                    html += `<div class="action-row"><div class="icon-box"><i class="fas ${act.icon}"></i></div>
+                    <div class="key-display" id="disp_L${currentLayer}_E${i}_${act.id}" onclick="record(${currentLayer}, ${i}, '${act.id}')">...</div></div>`;
+                });
+                html += `</div></div>`;
+                grid.innerHTML += html;
+            }
+            updateUI();
         }
 
-        function saveProfile() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(config));
-            const a = document.createElement('a'); a.href = dataStr; a.download = "deck_profile.json";
-            document.body.appendChild(a); a.click(); a.remove();
-        }
-
-        function loadProfile(input) {
-            const file = input.files[0]; if(!file) return;
-            const r = new FileReader();
-            r.onload = e => { try { config = JSON.parse(e.target.result); updateUI(); alert("✅ Chargé !"); } catch(err) { alert("Erreur fichier"); } };
-            r.readAsText(file); input.value = '';
+        function switchLayer(layer) {
+            currentLayer = layer;
+            document.getElementById('tab-l1').className = layer === 1 ? 'layer-tab active-l1' : 'layer-tab';
+            document.getElementById('tab-l2').className = layer === 2 ? 'layer-tab active-l2' : 'layer-tab';
+            const cont = document.getElementById('deckContainer');
+            if(layer === 2) cont.classList.add('mode-l2'); else cont.classList.remove('mode-l2');
+            renderDeck();
         }
 
         function updateUI() {
-            document.querySelectorAll('.key-display').forEach(el => el.innerText = "...");
-            for (const [ei, ed] of Object.entries(config)) {
-                for (const [ai, ad] of Object.entries(ed)) {
-                    const el = document.getElementById(`disp_${ei}_${ai}`);
-                    if(el && ad.key) el.innerText = (ad.mods.length ? ad.mods.join('+')+"+" : "") + ad.key;
-                }
+            for(let i=1; i<=3; i++) {
+                actions.forEach(act => {
+                    const el = document.getElementById(`disp_L${currentLayer}_E${i}_${act.id}`);
+                    if(!el) return;
+                    if(config[currentLayer] && config[currentLayer][i] && config[currentLayer][i][act.id]) {
+                        const data = config[currentLayer][i][act.id];
+                        // Affichage propre des actions spéciales
+                        let displayKey = data.key;
+                        if(displayKey.startsWith('MOUSE_SCROLL_UP')) displayKey = 'MOLETTE HAUT';
+                        if(displayKey.startsWith('MOUSE_SCROLL_DOWN')) displayKey = 'MOLETTE BAS';
+                        if(displayKey.startsWith('MEDIA_VOL_UP')) displayKey = 'VOL +';
+                        if(displayKey.startsWith('MEDIA_VOL_DOWN')) displayKey = 'VOL -';
+                        
+                        el.innerText = (data.mods.length ? data.mods.join('+')+" + " : "") + displayKey;
+                    } else { el.innerText = "..."; }
+                });
             }
         }
 
-        // --- ENREGISTREMENT ---
+        // --- RECORDING HYBRIDE ---
         let recordingState = null;
-        function record(enc, type) {
+        let activeModifiers = []; // Stocke les modifiers appuyés pendant l'enregistrement
+
+        function record(layer, enc, type) {
             if(recordingState) return;
-            const el = document.getElementById(`disp_${enc}_${type}`);
+            const el = document.getElementById(`disp_L${layer}_E${enc}_${type}`);
             const originalText = el.innerText;
-            el.innerText = "?"; el.classList.add('recording');
-            recordingState = { enc, type, el, originalText };
-            document.addEventListener('keydown', handleKey); document.addEventListener('mousedown', cancelOutside);
+            el.innerText = "Appuyez ou Cliquez..."; el.classList.add('recording');
+            
+            // Ouvrir le panel spécial
+            document.getElementById('special-panel').style.display = 'block';
+
+            recordingState = { layer, enc, type, el, originalText };
+            activeModifiers = [];
+
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
+            document.addEventListener('mousedown', cancelOutside);
+        }
+
+        function handleKeyDown(e) {
+            if(!recordingState) return;
+            
+            // Gestion des Modifiers (on les track)
+            if(e.key === 'Control' && !activeModifiers.includes('CTRL')) activeModifiers.push('CTRL');
+            if(e.key === 'Shift' && !activeModifiers.includes('SHIFT')) activeModifiers.push('SHIFT');
+            if(e.key === 'Alt' && !activeModifiers.includes('ALT')) activeModifiers.push('ALT');
+            if(e.key === 'Meta' && !activeModifiers.includes('GUI')) activeModifiers.push('GUI');
+
+            if(['Control','Shift','Alt','Meta'].includes(e.key)) return; // On attend une autre touche
+
+            e.preventDefault();
+            // C'est une touche normale -> On enregistre
+            saveAction(e.key.toUpperCase(), activeModifiers);
+        }
+
+        function handleKeyUp(e) {
+            // Si on relâche un modifier, on l'enlève de la liste
+            if(e.key === 'Control') activeModifiers = activeModifiers.filter(m => m !== 'CTRL');
+            if(e.key === 'Shift') activeModifiers = activeModifiers.filter(m => m !== 'SHIFT');
+            if(e.key === 'Alt') activeModifiers = activeModifiers.filter(m => m !== 'ALT');
+            if(e.key === 'Meta') activeModifiers = activeModifiers.filter(m => m !== 'GUI');
+        }
+
+        // Appelée par les boutons à l'écran
+        function insertSpecial(specialKey) {
+            if(!recordingState) return;
+            // On combine les modifiers physiques actuels avec le clic écran
+            saveAction(specialKey, [...activeModifiers]); 
+        }
+
+        function saveAction(key, mods) {
+            let arduinoKey = key;
+            
+            // Mapping touches standards si ce n'est pas une action spéciale
+            if(!key.startsWith('MOUSE_') && !key.startsWith('MEDIA_')) {
+                const nice = { ' ': 'SPACE', 'ENTER': 'ENTER', 'ESCAPE': 'ESC', 'ARROWUP': 'UP', 'ARROWDOWN': 'DOWN', 'ARROWLEFT': 'LEFT', 'ARROWRIGHT': 'RIGHT' };
+                if(nice[key]) key = nice[key];
+                arduinoKey = mapToArduino(key);
+            }
+
+            // Sauvegarde
+            if(!config[recordingState.layer]) config[recordingState.layer] = {};
+            if(!config[recordingState.layer][recordingState.enc]) config[recordingState.layer][recordingState.enc] = {};
+            
+            config[recordingState.layer][recordingState.enc][recordingState.type] = { 
+                key: key, 
+                mods: [...mods], 
+                arduinoKey: arduinoKey 
+            };
+
+            stopRecording();
+        }
+
+        function stopRecording() {
+            updateUI(); 
+            recordingState.el.classList.remove('recording');
+            document.getElementById('special-panel').style.display = 'none';
+            document.removeEventListener('keydown', handleKeyDown);
+            document.removeEventListener('keyup', handleKeyUp);
+            document.removeEventListener('mousedown', cancelOutside);
+            recordingState = null;
         }
 
         function cancelOutside(e) {
-            if(recordingState && e.target !== recordingState.el && !recordingState.el.contains(e.target)) {
-                recordingState.el.innerText = recordingState.originalText; recordingState.el.classList.remove('recording'); cleanupRecord();
+            // Si on clique hors du panel et hors du bouton en cours
+            const panel = document.getElementById('special-panel');
+            if(recordingState && !panel.contains(e.target) && e.target !== recordingState.el) {
+                recordingState.el.innerText = recordingState.originalText;
+                stopRecording();
             }
-        }
-        function cleanupRecord() { document.removeEventListener('keydown', handleKey); document.removeEventListener('mousedown', cancelOutside); recordingState = null; }
-
-        function handleKey(e) {
-            e.preventDefault(); if(!recordingState) return;
-            if(['Control','Shift','Alt','Meta'].includes(e.key)) return;
-            let mods = []; if(e.ctrlKey) mods.push("CTRL"); if(e.shiftKey) mods.push("SHIFT"); if(e.altKey) mods.push("ALT"); if(e.metaKey) mods.push("GUI");
-            let key = e.key.toUpperCase();
-            const nice = { ' ': 'SPACE', 'ENTER': 'ENTER', 'ESCAPE': 'ESC', 'ARROWUP': 'UP', 'ARROWDOWN': 'DOWN', 'ARROWLEFT': 'LEFT', 'ARROWRIGHT': 'RIGHT' };
-            if(nice[key]) key = nice[key];
-            if(!config[recordingState.enc]) config[recordingState.enc] = {};
-            config[recordingState.enc][recordingState.type] = { key, mods, arduinoKey: mapToArduino(key) };
-            updateUI(); recordingState.el.classList.remove('recording'); cleanupRecord();
         }
 
         function mapToArduino(key) {
             if(key.length === 1) return `'${key.toLowerCase()}'`;
-            const m = { 'SPACE': "' '", 'ENTER': 'KEY_RETURN', 'ESC': 'KEY_ESC', 'UP': 'KEY_UP_ARROW', 'DOWN': 'KEY_DOWN_ARROW', 'LEFT': 'KEY_LEFT_ARROW', 'RIGHT': 'KEY_RIGHT_ARROW', 'F1':'KEY_F1', 'F2':'KEY_F2', 'F12':'KEY_F12' };
+            const m = { 'SPACE': "' '", 'ENTER': 'KEY_RETURN', 'ESC': 'KEY_ESC', 'UP': 'KEY_UP_ARROW', 'DOWN': 'KEY_DOWN_ARROW', 'LEFT': 'KEY_LEFT_ARROW', 'RIGHT': 'KEY_RIGHT_ARROW', 'F1':'KEY_F1', 'F12':'KEY_F12', 'TAB':'KEY_TAB', 'DELETE':'KEY_DELETE', 'BACKSPACE':'KEY_BACKSPACE' };
             return m[key] || '0';
         }
 
-        // --- CODE GEN ---
+        // --- CODE GENERATOR INTELLIGENT ---
         function generateSource() {
-            let c = `/* Généré par Deux Ohms Configurator - https://www.youtube.com/@DeuxOhms */
+            let c = `/* Deux Ohms - Hybrid V3.0 */
 #include <Encoder.h>
 #include <HID-Project.h>
 
@@ -287,48 +346,101 @@ Encoder enc2(4, 5); const int sw2 = 9;
 Encoder enc3(6, 7); const int sw3 = 10;
 long old1=0, old2=0, old3=0;
 
+const int shiftPin = ${shiftPin === 'none' ? -1 : shiftPin};
+
 void setup() {
   pinMode(sw1, INPUT_PULLUP); pinMode(sw2, INPUT_PULLUP); pinMode(sw3, INPUT_PULLUP);
-  Consumer.begin(); Keyboard.begin();
+  Consumer.begin(); Keyboard.begin(); Mouse.begin();
 }
 
 void loop() {
-  check(1, enc1, sw1, old1); check(2, enc2, sw2, old2); check(3, enc3, sw3, old3); delay(5);
+  int layer = 1;
+  if(shiftPin != -1 && digitalRead(shiftPin) == LOW) layer = 2; 
+
+  check(1, enc1, sw1, old1, layer);
+  check(2, enc2, sw2, old2, layer);
+  check(3, enc3, sw3, old3, layer);
+  delay(5);
 }
 
-void check(int id, Encoder &e, int sw, long &old) {
+void check(int id, Encoder &e, int sw, long &old, int layer) {
   long newP = e.read() / 4;
-  if(newP != old) { if(newP > old) trig(id, "cw"); else trig(id, "ccw"); old = newP; }
-  if(digitalRead(sw) == LOW) { trig(id, "sw"); delay(300); }
+  if(newP != old) {
+    if(newP > old) trig(id, "cw", layer); else trig(id, "ccw", layer);
+    old = newP;
+  }
+  if(sw != shiftPin && digitalRead(sw) == LOW) { trig(id, "sw", layer); delay(300); }
 }
 
-void trig(int id, String t) {
+void trig(int id, String t, int layer) {
 `;
-            for(let i=1; i<=3; i++) {
-                if(config[i]) {
-                    ['cw','ccw','sw'].forEach(type => {
-                        if(config[i][type]) {
-                            c += `  if(id==${i} && t=="${type}") { `;
-                            config[i][type].mods.forEach(m => c += `Keyboard.press(KEY_LEFT_${m}); `);
-                            c += `Keyboard.press(${config[i][type].arduinoKey}); Keyboard.releaseAll(); }\n`;
+            for(let l=1; l<=2; l++) {
+                c += `  // L${l}\n`;
+                if(config[l]) {
+                    for(let i=1; i<=3; i++) {
+                        if(config[l][i]) {
+                            ['cw','ccw','sw'].forEach(type => {
+                                if(config[l][i][type]) {
+                                    const d = config[l][i][type];
+                                    c += `  if(layer==${l} && id==${i} && t=="${type}") { `;
+                                    
+                                    // 1. Press Modifiers
+                                    d.mods.forEach(m => c += `Keyboard.press(KEY_LEFT_${m}); `);
+                                    
+                                    // 2. Action Principal (Keyboard vs Mouse vs Media)
+                                    if(d.arduinoKey.startsWith('MOUSE_')) {
+                                        if(d.arduinoKey === 'MOUSE_SCROLL_UP') c += `Mouse.move(0,0,1); `;
+                                        if(d.arduinoKey === 'MOUSE_SCROLL_DOWN') c += `Mouse.move(0,0,-1); `;
+                                        if(d.arduinoKey === 'MOUSE_LEFT') c += `Mouse.click(MOUSE_LEFT); `;
+                                        if(d.arduinoKey === 'MOUSE_RIGHT') c += `Mouse.click(MOUSE_RIGHT); `;
+                                    } 
+                                    else if(d.arduinoKey.startsWith('MEDIA_')) {
+                                         if(d.arduinoKey === 'MEDIA_VOL_UP') c += `Consumer.write(MEDIA_VOLUME_UP); `;
+                                         if(d.arduinoKey === 'MEDIA_VOL_DOWN') c += `Consumer.write(MEDIA_VOLUME_DOWN); `;
+                                         if(d.arduinoKey === 'MEDIA_MUTE') c += `Consumer.write(MEDIA_VOLUME_MUTE); `;
+                                         if(d.arduinoKey === 'MEDIA_PLAY_PAUSE') c += `Consumer.write(MEDIA_PLAY_PAUSE); `;
+                                    }
+                                    else {
+                                        c += `Keyboard.press(${d.arduinoKey}); `;
+                                    }
+
+                                    // 3. Release All
+                                    c += `Keyboard.releaseAll(); }\n`;
+                                }
+                            });
                         }
-                    });
+                    }
                 }
             }
             c += `}`; return c;
         }
 
+        // UTILS
+        function updateShiftConfig() { shiftPin = document.getElementById('shiftSelect').value; }
         function toggleCode(readonly) {
-            const area = document.getElementById('codeArea'); const container = document.getElementById('editor-container');
+            const area = document.getElementById('codeArea');
             if(readonly || area.value.trim() === "") area.value = generateSource();
-            area.readOnly = readonly; area.style.color = readonly ? '#aaa' : '#d4d4d4';
-            container.style.display = 'block'; container.scrollIntoView({behavior: "smooth"});
+            area.readOnly = readonly; document.getElementById('editor-container').style.display = 'block';
+        }
+        function copyCode() { navigator.clipboard.writeText(document.getElementById('codeArea').value || generateSource()).then(()=>alert("Copié !")); }
+        function saveProfile() {
+            const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({config, shiftPin}));
+            a.download = "hybrid_profile.json"; document.body.appendChild(a); a.click(); a.remove();
+        }
+        function loadProfile(input) {
+            const r = new FileReader();
+            r.onload = e => { 
+                 const d = JSON.parse(e.target.result);
+                 if(d.shiftPin) { config = d.config; shiftPin = d.shiftPin; document.getElementById('shiftSelect').value = shiftPin; }
+                 switchLayer(1); alert("Chargé !");
+            };
+            if(input.files[0]) r.readAsText(input.files[0]);
+        }
+        function loadPreset(name) {
+            if(confirm("Charger Preset ?")) { config = JSON.parse(JSON.stringify(presets[name])); switchLayer(1); alert("Preset Chargé !"); }
         }
 
-        function copyCode() {
-            const area = document.getElementById('codeArea'); let text = area.value || generateSource();
-            navigator.clipboard.writeText(text).then(() => alert("✅ Code copié !"));
-        }
+        renderDeck();
     </script>
 </body>
 </html>
