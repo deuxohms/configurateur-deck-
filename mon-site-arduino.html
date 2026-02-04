@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Deux Ohms - Hybrid Master</title>
+    <title>Deck+ Configurator</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -14,23 +14,32 @@
 
         /* HEADER */
         .header-area { width: 100%; max-width: 1000px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-        h1 { font-weight: 300; letter-spacing: 1px; margin: 0; font-size: 1.8em; display: flex; align-items: center; gap: 10px; }
+        h1 { font-weight: 700; letter-spacing: 1px; margin: 0; font-size: 2em; display: flex; align-items: center; gap: 10px; background: -webkit-linear-gradient(45deg, #fff, #aaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
         .toolbar-top { display: flex; gap: 10px; background: var(--bg-panel); padding: 10px; border-radius: 10px; border: 1px solid #333; flex-wrap: wrap; }
         .btn-tool { background: #2c2e33; color: white; border: 1px solid #444; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
         .btn-tool:hover { background: #3c3e44; border-color: #666; }
         .btn-preset { border-color: var(--layer-1); color: var(--layer-1); }
         .btn-preset:hover { background: var(--layer-1); color: white; }
 
-        /* LAYERS & SHIFT */
-        .layer-tabs { display: flex; background: #18181b; border-radius: 50px; padding: 5px; border: 1px solid #333; margin-bottom: 20px; }
-        .layer-tab { padding: 10px 30px; border-radius: 40px; cursor: pointer; font-weight: bold; transition: 0.3s; color: #888; border: 1px solid transparent; }
+        /* LAYERS & EXPLAINER */
+        .layer-section { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        .layer-tabs { display: flex; background: #18181b; border-radius: 50px; padding: 5px; border: 1px solid #333; margin-bottom: 15px; }
+        .layer-tab { padding: 10px 40px; border-radius: 40px; cursor: pointer; font-weight: bold; transition: 0.3s; color: #888; border: 1px solid transparent; }
         .layer-tab.active-l1 { background: var(--layer-1); color: white; box-shadow: 0 0 15px rgba(51, 154, 240, 0.4); }
         .layer-tab.active-l2 { background: var(--layer-2); color: white; box-shadow: 0 0 15px rgba(224, 49, 49, 0.4); }
-        
+
+        .layer-explainer { 
+            background: rgba(51, 154, 240, 0.1); border-left: 3px solid var(--accent);
+            padding: 10px 20px; border-radius: 0 6px 6px 0; font-size: 0.9em; color: #ccc; max-width: 600px;
+        }
+        .layer-explainer strong { color: white; }
+
+        /* SHIFT CONFIG */
         .shift-config { background: #25262b; padding: 15px 25px; border-radius: 12px; border: 1px solid #444; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; }
         .shift-select { background: #101113; color: white; border: 1px solid #555; padding: 8px; border-radius: 5px; font-family: inherit; cursor: pointer; }
 
-        /* --- SPECIAL KEYS PANEL (NEW) --- */
+        /* SPECIAL PANEL */
         #special-panel {
             width: 100%; max-width: 900px; background: #2a2a35; border: 2px solid var(--accent);
             border-radius: 12px; padding: 20px; margin-bottom: 30px; display: none;
@@ -47,10 +56,9 @@
             transition: 0.2s;
         }
         .sp-btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
-        .sp-btn i { font-size: 1.1em; }
         .recording-indicator { color: var(--accent); font-weight: bold; margin-bottom: 15px; display: block; text-align: center; }
 
-        /* DECK */
+        /* DECK UI */
         .deck-container { background: #18181b; padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); display: flex; gap: 40px; margin-bottom: 30px; border: 1px solid #333; flex-wrap: wrap; justify-content: center; position: relative; overflow: hidden; transition: 0.3s; }
         .deck-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--layer-1); transition: 0.3s; }
         .deck-container.mode-l2::before { background: var(--layer-2); }
@@ -78,10 +86,26 @@
         #editor-container { width: 100%; max-width: 800px; display: none; margin-bottom: 50px; }
         .editor-header { background: #2d2d2d; padding: 10px 20px; border-radius: 8px 8px 0 0; font-size: 0.9em; color: #aaa; border: 1px solid #444; border-bottom: none; }
         textarea.code-area { width: 100%; height: 300px; background: var(--code-bg); color: #d4d4d4; border: 1px solid #444; border-radius: 0 0 8px 8px; padding: 20px; font-family: 'Consolas', monospace; font-size: 14px; resize: vertical; outline: none; box-sizing: border-box; }
+
+        /* FAQ SECTION */
+        .faq-section { width: 100%; max-width: 900px; margin-top: 20px; margin-bottom: 40px; }
+        .faq-title { font-size: 1.5em; font-weight: 300; margin-bottom: 20px; text-align: center; color: var(--text-main); }
         
+        details { background: #18181b; border: 1px solid #333; border-radius: 8px; margin-bottom: 10px; overflow: hidden; transition: 0.2s; }
+        details:hover { border-color: #555; }
+        details[open] { border-color: var(--accent); }
+        
+        summary { padding: 15px 20px; cursor: pointer; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: #666; transition: 0.3s; }
+        details[open] summary::after { transform: rotate(180deg); color: var(--accent); }
+        
+        .faq-content { padding: 0 20px 20px 20px; color: #bbb; line-height: 1.6; font-size: 0.95em; border-top: 1px solid #2a2a2a; margin-top: 10px; padding-top: 15px;}
+        .faq-content strong { color: white; }
+
         .yt-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid #333; width: 100%; text-align: center; }
         .yt-link { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: white; font-size: 1.2em; background: #202020; padding: 10px 25px; border-radius: 50px; transition: 0.3s; border: 1px solid #333; }
-        .yt-link:hover { background: #2a2a2a; border-color: var(--yt-red); box-shadow: 0 0 20px rgba(255, 0, 0, 0.2); }
+        .yt-link:hover { background: #2a2a2a; border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.2); }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         #fileInput { display: none; }
@@ -90,7 +114,7 @@
 <body>
 
     <div class="header-area">
-        <h1><i class="fas fa-microchip"></i> HYBRID MASTER <span style="font-size:0.5em; background:var(--layer-2); padding:2px 8px; border-radius:4px; margin-left:10px;">V3.0</span></h1>
+        <h1><i class="fas fa-gamepad"></i> Deck+</h1>
         
         <div class="toolbar-top">
             <button class="btn-tool" onclick="saveProfile()"><i class="fas fa-save"></i> Save</button>
@@ -102,16 +126,23 @@
         </div>
     </div>
 
-    <div class="layer-tabs">
-        <div class="layer-tab active-l1" id="tab-l1" onclick="switchLayer(1)">LAYER 1</div>
-        <div class="layer-tab" id="tab-l2" onclick="switchLayer(2)">LAYER 2 (Fn)</div>
+    <div class="layer-section">
+        <div class="layer-tabs">
+            <div class="layer-tab active-l1" id="tab-l1" onclick="switchLayer(1)">LAYER 1 (Normal)</div>
+            <div class="layer-tab" id="tab-l2" onclick="switchLayer(2)">LAYER 2 (Fn)</div>
+        </div>
+        
+        <div class="layer-explainer">
+            <i class="fas fa-info-circle"></i> <strong>C'est quoi un Layer ?</strong>
+            Le <em>Layer 1</em> est votre mode principal. Le <em>Layer 2</em> s'active uniquement quand vous <strong>maintenez</strong> le bouton "Déclencheur" (Shift) configuré ci-dessous. C'est comme la touche "Fn" de votre clavier : cela double le nombre de fonctions !
+        </div>
     </div>
 
     <div id="special-panel">
-        <span class="recording-indicator">🔴 ENREGISTREMENT EN COURS... Appuyez sur une touche OU choisissez ci-dessous :</span>
+        <span class="recording-indicator">🔴 ENREGISTREMENT... Choisissez une action ou appuyez sur une touche :</span>
         
         <div class="sp-group">
-            <span class="sp-title">Souris & Navigation</span>
+            <span class="sp-title">Souris</span>
             <div class="sp-buttons">
                 <button class="sp-btn" onclick="insertSpecial('MOUSE_SCROLL_UP')"><i class="fas fa-arrow-up"></i> Molette HAUT</button>
                 <button class="sp-btn" onclick="insertSpecial('MOUSE_SCROLL_DOWN')"><i class="fas fa-arrow-down"></i> Molette BAS</button>
@@ -119,30 +150,26 @@
                 <button class="sp-btn" onclick="insertSpecial('MOUSE_RIGHT')"><i class="fas fa-mouse"></i> Clic Droit</button>
             </div>
         </div>
-
         <div class="sp-group">
-            <span class="sp-title">Multimédia (Windows/Mac)</span>
+            <span class="sp-title">Média</span>
             <div class="sp-buttons">
-                <button class="sp-btn" onclick="insertSpecial('MEDIA_VOL_UP')"><i class="fas fa-volume-up"></i> Volume +</button>
-                <button class="sp-btn" onclick="insertSpecial('MEDIA_VOL_DOWN')"><i class="fas fa-volume-down"></i> Volume -</button>
+                <button class="sp-btn" onclick="insertSpecial('MEDIA_VOL_UP')"><i class="fas fa-volume-up"></i> Vol +</button>
+                <button class="sp-btn" onclick="insertSpecial('MEDIA_VOL_DOWN')"><i class="fas fa-volume-down"></i> Vol -</button>
                 <button class="sp-btn" onclick="insertSpecial('MEDIA_MUTE')"><i class="fas fa-volume-mute"></i> Mute</button>
                 <button class="sp-btn" onclick="insertSpecial('MEDIA_PLAY_PAUSE')"><i class="fas fa-play"></i> Play/Pause</button>
             </div>
         </div>
-        
-        <div style="margin-top:15px; font-size:0.9em; color:#888; font-style:italic;">
-            💡 Astuce : Maintenez CTRL ou ALT sur votre clavier physique en cliquant sur un bouton ci-dessus pour créer un combo (ex: CTRL + Molette).
-        </div>
+        <div style="margin-top:10px; font-size:0.8em; color:#666;">Astuce : Maintenez CTRL/ALT sur votre clavier physique en cliquant ici pour créer un combo.</div>
     </div>
 
     <div class="shift-config">
         <i class="fas fa-random" style="color:#aaa;"></i>
-        <span>Déclencheur Layer 2 :</span>
+        <span>Bouton Déclencheur (Shift) :</span>
         <select id="shiftSelect" class="shift-select" onchange="updateShiftConfig()">
             <option value="8">Bouton Encodeur 1</option>
             <option value="9">Bouton Encodeur 2</option>
             <option value="10">Bouton Encodeur 3</option>
-            <option value="none">-- Aucun --</option>
+            <option value="none">-- Aucun (Layer 1 seul) --</option>
         </select>
     </div>
 
@@ -160,6 +187,48 @@
         <textarea id="codeArea" class="code-area" spellcheck="false"></textarea>
     </div>
 
+    <div class="faq-section">
+        <h2 class="faq-title"><i class="fas fa-question-circle"></i> FAQ & Aide</h2>
+        
+        <details>
+            <summary>Comment téléverser ce code sur l'Arduino ?</summary>
+            <div class="faq-content">
+                1. Téléchargez et installez l'IDE Arduino.<br>
+                2. Installez les bibliothèques <strong>"Encoder"</strong> (Paul Stoffregen) et <strong>"HID-Project"</strong> (NicoHood) via le gestionnaire de bibliothèques.<br>
+                3. Copiez le code généré ici (bouton bleu).<br>
+                4. Collez-le dans l'IDE Arduino, sélectionnez votre carte "Arduino Leonardo" ou "Pro Micro" et cliquez sur Téléverser (Flèche droite).
+            </div>
+        </details>
+
+        <details>
+            <summary>Mon Arduino ne compile pas / Erreur HID ?</summary>
+            <div class="faq-content">
+                Assurez-vous d'avoir bien sélectionné une carte compatible HID comme l'<strong>Arduino Pro Micro</strong> (ATmega32U4) ou Arduino Leonardo. Les Arduino Uno ou Nano classiques ne fonctionnent pas nativement comme clavier/souris avec ce code.
+            </div>
+        </details>
+
+        <details>
+            <summary>Comment faire un Combo (ex: Ctrl + Molette) ?</summary>
+            <div class="faq-content">
+                C'est très simple :<br>
+                1. Cliquez sur la case que vous voulez configurer.<br>
+                2. Maintenez la touche <strong>CTRL</strong> (ou ALT, SHIFT) enfoncée sur votre <strong>vrai clavier physique</strong>.<br>
+                3. Tout en maintenant la touche, cliquez sur le bouton "Molette HAUT" dans le panneau qui est apparu à l'écran.<br>
+                4. Relâchez tout : le combo est enregistré !
+            </div>
+        </details>
+
+        <details>
+            <summary>Schéma de câblage rapide</summary>
+            <div class="faq-content">
+                Reliez tous les <strong>GND</strong> ensemble et tous les <strong>VCC</strong> (5V) ensemble.<br>
+                <strong>Encodeur 1 :</strong> DT=Pin 2, CLK=Pin 3, SW=Pin 8<br>
+                <strong>Encodeur 2 :</strong> DT=Pin 4, CLK=Pin 5, SW=Pin 9<br>
+                <strong>Encodeur 3 :</strong> DT=Pin 6, CLK=Pin 7, SW=Pin 10
+            </div>
+        </details>
+    </div>
+
     <footer class="yt-footer">
         <a href="https://www.youtube.com/@DeuxOhms" target="_blank" class="yt-link">
             <i class="fab fa-youtube yt-icon"></i> Deux Ohms
@@ -167,28 +236,19 @@
     </footer>
 
     <script>
-        // CONFIG
+        /* LOGIC CORE */
         const actions = [ { id: 'ccw', icon: 'fa-undo' }, { id: 'sw', icon: 'fa-fingerprint' }, { id: 'cw', icon: 'fa-redo' } ];
         const grid = document.getElementById('deck-grid');
         let currentLayer = 1;
         let shiftPin = "8";
         let config = { 1: {}, 2: {} };
 
-        // PRESETS V3 (Hybrid)
         const presets = {
             photoshop: {
-                1: { // Base
-                    1: { cw: {key:'MOUSE_SCROLL_UP',mods:[],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:[],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'SPACE',mods:[],arduinoKey:"' '"} }, // Scroll
-                    2: { cw: {key:'MOUSE_SCROLL_UP',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'0',mods:['CTRL'],arduinoKey:"'0'"} }, // Zoom (Alt+Scroll)
-                    3: { cw: {key:'Z',mods:['CTRL','SHIFT'],arduinoKey:"'z'"}, ccw: {key:'Z',mods:['CTRL'],arduinoKey:"'z'"}, sw: {key:'S',mods:['CTRL'],arduinoKey:"'s'"} }
-                }
+                1: { 1: { cw: {key:'MOUSE_SCROLL_UP',mods:[],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:[],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'SPACE',mods:[],arduinoKey:"' '"} }, 2: { cw: {key:'MOUSE_SCROLL_UP',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'0',mods:['CTRL'],arduinoKey:"'0'"} }, 3: { cw: {key:'Z',mods:['CTRL','SHIFT'],arduinoKey:"'z'"}, ccw: {key:'Z',mods:['CTRL'],arduinoKey:"'z'"}, sw: {key:'S',mods:['CTRL'],arduinoKey:"'s'"} } }
             },
             premiere: {
-                1: {
-                    1: { cw: {key:'MOUSE_SCROLL_UP',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'SPACE',mods:[],arduinoKey:"' '"} }, // Zoom Timeline
-                    2: { cw: {key:'MOUSE_SCROLL_UP',mods:['CTRL'],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:['CTRL'],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'M',mods:[],arduinoKey:"'m'"} }, // Piste Hauteur
-                    3: { cw: {key:'K',mods:['CTRL'],arduinoKey:"'k'"}, ccw: {key:'Z',mods:['CTRL'],arduinoKey:"'z'"}, sw: {key:'S',mods:['CTRL'],arduinoKey:"'s'"} }
-                }
+                1: { 1: { cw: {key:'MOUSE_SCROLL_UP',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:['ALT'],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'SPACE',mods:[],arduinoKey:"' '"} }, 2: { cw: {key:'MOUSE_SCROLL_UP',mods:['CTRL'],arduinoKey:'MOUSE_SCROLL_UP'}, ccw: {key:'MOUSE_SCROLL_DOWN',mods:['CTRL'],arduinoKey:'MOUSE_SCROLL_DOWN'}, sw: {key:'M',mods:[],arduinoKey:"'m'"} }, 3: { cw: {key:'K',mods:['CTRL'],arduinoKey:"'k'"}, ccw: {key:'Z',mods:['CTRL'],arduinoKey:"'z'"}, sw: {key:'S',mods:['CTRL'],arduinoKey:"'s'"} } }
             }
         };
 
@@ -197,8 +257,7 @@
             for (let i = 1; i <= 3; i++) {
                 let html = `<div class="knob-column"><div class="knob-visual"></div><div class="knob-title">Encodeur ${i}</div><div class="config-card">`;
                 actions.forEach(act => {
-                    html += `<div class="action-row"><div class="icon-box"><i class="fas ${act.icon}"></i></div>
-                    <div class="key-display" id="disp_L${currentLayer}_E${i}_${act.id}" onclick="record(${currentLayer}, ${i}, '${act.id}')">...</div></div>`;
+                    html += `<div class="action-row"><div class="icon-box"><i class="fas ${act.icon}"></i></div><div class="key-display" id="disp_L${currentLayer}_E${i}_${act.id}" onclick="record(${currentLayer}, ${i}, '${act.id}')">...</div></div>`;
                 });
                 html += `</div></div>`;
                 grid.innerHTML += html;
@@ -222,35 +281,32 @@
                     if(!el) return;
                     if(config[currentLayer] && config[currentLayer][i] && config[currentLayer][i][act.id]) {
                         const data = config[currentLayer][i][act.id];
-                        // Affichage propre des actions spéciales
-                        let displayKey = data.key;
-                        if(displayKey.startsWith('MOUSE_SCROLL_UP')) displayKey = 'MOLETTE HAUT';
-                        if(displayKey.startsWith('MOUSE_SCROLL_DOWN')) displayKey = 'MOLETTE BAS';
-                        if(displayKey.startsWith('MEDIA_VOL_UP')) displayKey = 'VOL +';
-                        if(displayKey.startsWith('MEDIA_VOL_DOWN')) displayKey = 'VOL -';
-                        
-                        el.innerText = (data.mods.length ? data.mods.join('+')+" + " : "") + displayKey;
+                        let k = data.key;
+                        if(k.startsWith('MOUSE_SCROLL_UP')) k = 'MOLETTE HAUT';
+                        if(k.startsWith('MOUSE_SCROLL_DOWN')) k = 'MOLETTE BAS';
+                        if(k.startsWith('MOUSE_LEFT')) k = 'CLIC GAUCHE';
+                        if(k.startsWith('MOUSE_RIGHT')) k = 'CLIC DROIT';
+                        if(k.startsWith('MEDIA_VOL_UP')) k = 'VOL +';
+                        if(k.startsWith('MEDIA_VOL_DOWN')) k = 'VOL -';
+                        if(k.startsWith('MEDIA_MUTE')) k = 'MUTE';
+                        if(k.startsWith('MEDIA_PLAY_PAUSE')) k = 'PLAY/PAUSE';
+                        el.innerText = (data.mods.length ? data.mods.join('+')+" + " : "") + k;
                     } else { el.innerText = "..."; }
                 });
             }
         }
 
-        // --- RECORDING HYBRIDE ---
         let recordingState = null;
-        let activeModifiers = []; // Stocke les modifiers appuyés pendant l'enregistrement
+        let activeModifiers = [];
 
         function record(layer, enc, type) {
             if(recordingState) return;
             const el = document.getElementById(`disp_L${layer}_E${enc}_${type}`);
             const originalText = el.innerText;
-            el.innerText = "Appuyez ou Cliquez..."; el.classList.add('recording');
-            
-            // Ouvrir le panel spécial
+            el.innerText = "Appuyez..."; el.classList.add('recording');
             document.getElementById('special-panel').style.display = 'block';
-
             recordingState = { layer, enc, type, el, originalText };
             activeModifiers = [];
-
             document.addEventListener('keydown', handleKeyDown);
             document.addEventListener('keyup', handleKeyUp);
             document.addEventListener('mousedown', cancelOutside);
@@ -258,55 +314,37 @@
 
         function handleKeyDown(e) {
             if(!recordingState) return;
-            
-            // Gestion des Modifiers (on les track)
             if(e.key === 'Control' && !activeModifiers.includes('CTRL')) activeModifiers.push('CTRL');
             if(e.key === 'Shift' && !activeModifiers.includes('SHIFT')) activeModifiers.push('SHIFT');
             if(e.key === 'Alt' && !activeModifiers.includes('ALT')) activeModifiers.push('ALT');
             if(e.key === 'Meta' && !activeModifiers.includes('GUI')) activeModifiers.push('GUI');
-
-            if(['Control','Shift','Alt','Meta'].includes(e.key)) return; // On attend une autre touche
-
+            if(['Control','Shift','Alt','Meta'].includes(e.key)) return;
             e.preventDefault();
-            // C'est une touche normale -> On enregistre
             saveAction(e.key.toUpperCase(), activeModifiers);
         }
 
         function handleKeyUp(e) {
-            // Si on relâche un modifier, on l'enlève de la liste
             if(e.key === 'Control') activeModifiers = activeModifiers.filter(m => m !== 'CTRL');
             if(e.key === 'Shift') activeModifiers = activeModifiers.filter(m => m !== 'SHIFT');
             if(e.key === 'Alt') activeModifiers = activeModifiers.filter(m => m !== 'ALT');
             if(e.key === 'Meta') activeModifiers = activeModifiers.filter(m => m !== 'GUI');
         }
 
-        // Appelée par les boutons à l'écran
         function insertSpecial(specialKey) {
             if(!recordingState) return;
-            // On combine les modifiers physiques actuels avec le clic écran
             saveAction(specialKey, [...activeModifiers]); 
         }
 
         function saveAction(key, mods) {
             let arduinoKey = key;
-            
-            // Mapping touches standards si ce n'est pas une action spéciale
             if(!key.startsWith('MOUSE_') && !key.startsWith('MEDIA_')) {
                 const nice = { ' ': 'SPACE', 'ENTER': 'ENTER', 'ESCAPE': 'ESC', 'ARROWUP': 'UP', 'ARROWDOWN': 'DOWN', 'ARROWLEFT': 'LEFT', 'ARROWRIGHT': 'RIGHT' };
                 if(nice[key]) key = nice[key];
                 arduinoKey = mapToArduino(key);
             }
-
-            // Sauvegarde
             if(!config[recordingState.layer]) config[recordingState.layer] = {};
             if(!config[recordingState.layer][recordingState.enc]) config[recordingState.layer][recordingState.enc] = {};
-            
-            config[recordingState.layer][recordingState.enc][recordingState.type] = { 
-                key: key, 
-                mods: [...mods], 
-                arduinoKey: arduinoKey 
-            };
-
+            config[recordingState.layer][recordingState.enc][recordingState.type] = { key: key, mods: [...mods], arduinoKey: arduinoKey };
             stopRecording();
         }
 
@@ -321,7 +359,6 @@
         }
 
         function cancelOutside(e) {
-            // Si on clique hors du panel et hors du bouton en cours
             const panel = document.getElementById('special-panel');
             if(recordingState && !panel.contains(e.target) && e.target !== recordingState.el) {
                 recordingState.el.innerText = recordingState.originalText;
@@ -335,9 +372,8 @@
             return m[key] || '0';
         }
 
-        // --- CODE GENERATOR INTELLIGENT ---
         function generateSource() {
-            let c = `/* Deux Ohms - Hybrid V3.0 */
+            let c = `/* Deck+ Generated Code */
 #include <Encoder.h>
 #include <HID-Project.h>
 
@@ -345,7 +381,6 @@ Encoder enc1(2, 3); const int sw1 = 8;
 Encoder enc2(4, 5); const int sw2 = 9;
 Encoder enc3(6, 7); const int sw3 = 10;
 long old1=0, old2=0, old3=0;
-
 const int shiftPin = ${shiftPin === 'none' ? -1 : shiftPin};
 
 void setup() {
@@ -356,7 +391,6 @@ void setup() {
 void loop() {
   int layer = 1;
   if(shiftPin != -1 && digitalRead(shiftPin) == LOW) layer = 2; 
-
   check(1, enc1, sw1, old1, layer);
   check(2, enc2, sw2, old2, layer);
   check(3, enc3, sw3, old3, layer);
@@ -375,7 +409,6 @@ void check(int id, Encoder &e, int sw, long &old, int layer) {
 void trig(int id, String t, int layer) {
 `;
             for(let l=1; l<=2; l++) {
-                c += `  // L${l}\n`;
                 if(config[l]) {
                     for(let i=1; i<=3; i++) {
                         if(config[l][i]) {
@@ -383,28 +416,18 @@ void trig(int id, String t, int layer) {
                                 if(config[l][i][type]) {
                                     const d = config[l][i][type];
                                     c += `  if(layer==${l} && id==${i} && t=="${type}") { `;
-                                    
-                                    // 1. Press Modifiers
                                     d.mods.forEach(m => c += `Keyboard.press(KEY_LEFT_${m}); `);
-                                    
-                                    // 2. Action Principal (Keyboard vs Mouse vs Media)
                                     if(d.arduinoKey.startsWith('MOUSE_')) {
                                         if(d.arduinoKey === 'MOUSE_SCROLL_UP') c += `Mouse.move(0,0,1); `;
                                         if(d.arduinoKey === 'MOUSE_SCROLL_DOWN') c += `Mouse.move(0,0,-1); `;
                                         if(d.arduinoKey === 'MOUSE_LEFT') c += `Mouse.click(MOUSE_LEFT); `;
                                         if(d.arduinoKey === 'MOUSE_RIGHT') c += `Mouse.click(MOUSE_RIGHT); `;
-                                    } 
-                                    else if(d.arduinoKey.startsWith('MEDIA_')) {
+                                    } else if(d.arduinoKey.startsWith('MEDIA_')) {
                                          if(d.arduinoKey === 'MEDIA_VOL_UP') c += `Consumer.write(MEDIA_VOLUME_UP); `;
                                          if(d.arduinoKey === 'MEDIA_VOL_DOWN') c += `Consumer.write(MEDIA_VOLUME_DOWN); `;
                                          if(d.arduinoKey === 'MEDIA_MUTE') c += `Consumer.write(MEDIA_VOLUME_MUTE); `;
                                          if(d.arduinoKey === 'MEDIA_PLAY_PAUSE') c += `Consumer.write(MEDIA_PLAY_PAUSE); `;
-                                    }
-                                    else {
-                                        c += `Keyboard.press(${d.arduinoKey}); `;
-                                    }
-
-                                    // 3. Release All
+                                    } else { c += `Keyboard.press(${d.arduinoKey}); `; }
                                     c += `Keyboard.releaseAll(); }\n`;
                                 }
                             });
@@ -415,7 +438,6 @@ void trig(int id, String t, int layer) {
             c += `}`; return c;
         }
 
-        // UTILS
         function updateShiftConfig() { shiftPin = document.getElementById('shiftSelect').value; }
         function toggleCode(readonly) {
             const area = document.getElementById('codeArea');
@@ -425,7 +447,7 @@ void trig(int id, String t, int layer) {
         function copyCode() { navigator.clipboard.writeText(document.getElementById('codeArea').value || generateSource()).then(()=>alert("Copié !")); }
         function saveProfile() {
             const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({config, shiftPin}));
-            a.download = "hybrid_profile.json"; document.body.appendChild(a); a.click(); a.remove();
+            a.download = "deck_profile.json"; document.body.appendChild(a); a.click(); a.remove();
         }
         function loadProfile(input) {
             const r = new FileReader();
